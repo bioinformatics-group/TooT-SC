@@ -28,6 +28,7 @@ tar -xzf v1.svm.11_db.tar.gz
 tar -xzf v1.svm.11_datasets.tar.gz
 rm v1*
 ```
+Use `curl` if you don't have `wget`.
 
 ## FOLDERS
 There are a number of folders that support the running of TranCEP and its outputs.
@@ -52,7 +53,7 @@ The scripts needed to use the tool.
 
 ## HOW TO USE
  - This tool requires that `BLAST` be pre-installed
- - Usage: `TooTSC -query=<input> [-TooTSC=<TooTSCdir>] [-out=<outdir>]`
+ - Usage: `src/TooT_SC_V1_11.R -query=<input> [-TooTSC=<TooTSCdir>] [-out=<outdir>]`
   - `<input>` is your sequence input file in fasta format
   - `<out>` is the output directory where you want the predicted 	results, formatted as csv
   - `<TooTSCdir>` is the directory where the base TooT-SC files 	are located
