@@ -11,8 +11,10 @@ This tool predicts the substrate class of a given transporter. The class can bel
 [8] other Organonitrogen compound
 [9] nucleotide
 [10] Organic heterocyclic
-[11] Miscellaneous
-Details on ChEBI mapping is found under Substrate_ChEBI.csv file
+[11] Miscellaneous.
+
+
+Details on ChEBI mapping is found on Substrate_ChEBI.csv file.
  
 Input: transporter proteins sequences in Fasta format
 Output: the substrate class with highest probability, and the probabilities of the other classes.
