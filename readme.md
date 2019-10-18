@@ -17,6 +17,18 @@ This tool predicts the substrate class of a given transporter. The class can bel
 Input: transporter proteins sequences in Fasta format
 Output: the substrate class with highest probability, and the probabilities of the other classes.
 
+## Installation
+
+```bash
+git clone https://github.com/bioinformatics-group/TooT-SC.git
+cd TooT-SC
+wget https://tootsuite.encs.concordia.ca/databases/TooT-SC/v1.svm.11_db.tar.gz
+wget https://tootsuite.encs.concordia.ca/datasets/TooT-SC/v1.svm.11_datasets.tar.gz
+tar -xzf v1.svm.11_db.tar.gz
+tar -xzf v1.svm.11_datasets.tar.gz
+rm v1*
+```
+
 ## FOLDERS
 There are a number of folders that support the running of TranCEP and its outputs.
 
