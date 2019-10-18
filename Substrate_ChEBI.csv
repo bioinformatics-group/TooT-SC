@@ -1,0 +1,31 @@
+,Classs name,ChEBI-ID,#instances,Main decentents ,#instances
+1,nonselective inorganic molecule,(CHEBI:36914 - inorganic ion) and (CHEBI:24431 - chemical entity),26,,
+2,water,CHEBI:15377 - water,26,,
+3,inorganic cation,CHEBI:36915 - inorganic cation,601,,
+4,inorganic anion,CHEBI:24834 - inorganic anion,102,,
+5,organic anion,CHEBI:25696 - organic anion,107,,
+6,organooxogyn,CHEBI:36963 - organooxygen compound,174,,
+,,,,CHEBI:35381;CHEBI:63367 - monosaccharide and derivative,126
+,,,,CHEBI:50699; CHEBI:63563 - oligosaccharide and derivative,11
+,,,,CHEBI:18154; CHEBI:65212 -polysaccharide and derivative,4
+,,,,CHEBI:25384 -monocarboxylic acid - ,28
+,,,,CHEBI:35692 -dicarboxylic acid,1
+,,,,CHEBI:27093 -tricarboxylic acid ,4
+7,amino acid and derivatives,(CHEBI:33709 - amino acid) and (CHEBI:83821 - amino acid derivative),157,,
+8,other organonitrogen compound,,160,,
+,,,,CHEBI:16670 - peptide,27
+,,,,CHEBI:32952 - amine,4
+,,,,CHEBI:88061 - polyamine,11
+,,,,CHEBI:36080 - protein,113
+,,,,CHEBI:50047 - organic amino compound,5
+9,nucleotide,CHEBI:36976 - nucleotide,24,,
+10,organic heterocyclic,,37,,
+,,,,CHEBI:18282 - nucleobase,18
+,,,,CHEBI:33838 - nucleoside,16
+,,,,CHEBI:33696 - nucleic acid,3
+11,miscellaneous,,110,,
+,,,,CHEBI:26191 - polyol,4
+,,,,CHEBI:25703 - organic phosphate,23
+,,,,CHEBI:32988 - amide,3
+,,,,CHEBI:50860 - organic molecular entity,67
+,,,,CHEBI:25697 - organic cation,13
