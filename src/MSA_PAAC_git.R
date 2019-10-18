@@ -70,7 +70,7 @@ blastpSeq<- function(seq, start.pos = 1L, end.pos = nchar(seq),
   close(fileConn)
   
   #get the cossponding Fasta file
-  getseqcmd= paste0(shQuote(Sys.which('blastdbcmd')),' -db ',shQuote(database.path), ' -entry_batch ', fileName, ' -out ', paste0(output.path,"/seq.txt"))
+  getseqcmd= paste0(shQuote(Sys.which('blastdbcmd')),' -db ',shQuote(database.path), ' -entry_batch ', fileName, ' -out ', paste0(output.path,"seq.txt"))
   # print(getseqcmd)
   if (silent == TRUE) system(getseqcmd, ignore.stdout = TRUE) else system(getseqcmd)
   
@@ -133,14 +133,12 @@ PreparedataforMSAAAC = function(seq, start.pos = 1L, end.pos = nchar(seq),
 }
 MSA_PAAC<- function(fastafile)
 {
-  dirName= paste0(intermediateFiles,"/")
-  dir.create(dirName, showWarnings = FALSE, recursive = FALSE, mode = "0777") 
   seqs<- readFASTA(fastafile)
   names(seqs)<- sub("\\|.*","",sub(".+?\\|","", names(seqs)))
   for(j in c(1:length(seqs)))
   {
     x<- seqs[j]
-    #PreparedataforMSAAAC(seq= x,database.path=paste0(dbpath,"/SwissOct18.fasta"),output.path= dirName)
+    PreparedataforMSAAAC(seq= x,database.path=paste0(dbpath,"/SwissOct18.fasta"),output.path=intermediateFiles)
   }
   
 
@@ -150,7 +148,7 @@ dfMSAPAAC <- data.frame(matrix(ncol = 400+1, nrow =0))
 
 for(i in c(1:length(AAfiles)))
 {
-  subdirName<- paste0(intermediateFiles,"/",AAfiles[i],"/")
+  subdirName<- paste0(intermediateFiles,AAfiles[i],"/")
   print(subdirName)
   AllComp<- ClaculateCompostions_return(subdirName,"seq.txt")
   

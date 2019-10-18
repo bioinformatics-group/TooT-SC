@@ -7,6 +7,43 @@
 ## Author: Munira Alballa
 ##################################################
 
+standardized<-function(x,rmean,rsd){((x-rmean)/rsd)}
+pop.sd<-function(x){sqrt(sum((x-mean(x))^2)/length(x))}
+normalize<- function(matrix){
+  data=matrix
+  standardizedData<- matrix
+  for( i in 1:length(data[,1]) )#until L
+  {
+    #compute mean across the 20 aa
+    rmean= mean(data[i,])
+    rsd=pop.sd(data[i,])
+    standardizedData[i,]<- standardized(data[i,],rmean,rsd)
+  }
+        return(standardizedData)
+
+
+}
+oneVsRestSVM<- function(testdata){
+  probabilities<- matrix(data=0, nrow=length(testdata[,1]), ncol=length(substates))
+  colnames(probabilities)<-as.numeric(factor(substates, levels = substates))
+  for( z in 1:length(substates))
+  {
+    svm.fit<- readRDS(paste0(TooTSCdir,"/models/MSAPAAC_class",z,"_1vsall.rds"))
+
+    svm.predtest<-predict(svm.fit,standardizedData, probability=T)
+    probabilities[,z]<- attr(svm.predtest,"probabilities")[,"1"]
+
+  }
+
+
+  pred<-as.vector(apply(probabilities, 1, function(x) names(which(x == max(x)))[1]))
+  return(cbind.data.frame(pred=pred,probabilities ,stringsAsFactors=F ))
+
+}
+
+
+
+
 args <- commandArgs(trailingOnly=TRUE)
 
 terminate <- FALSE
@@ -25,7 +62,7 @@ for(i in args){
            out <- arg[2]
          },
          "-TooTSC"={
-           TooTSC <- arg[2]
+           TooTSCdir <- arg[2]
          },
          "-help"={
            cat("TooTSC v1.0 (Oct. 2019)\n")
@@ -52,8 +89,6 @@ if(!terminate) {
   
   test_fasta <- normalizePath(path.expand(query))
   resultspath <- paste0(normalizePath(path.expand(out)),"/")
-  #TooTSCdir="/Users/admin/Dropbox/gitTest/TooT-SC.v1.svm.11/"
-  #test_fasta=paste0(TooTSCdir,"test.fasta")
   require(seqinr)
   library("Biostrings")
   library("stringr")
@@ -79,9 +114,9 @@ if(!terminate) {
   
   
   #testing data with unknown substrates
-  source(paste0(TooTSCdir,"src/MSA_PAAC_git.R"))
+  source(paste0(TooTSCdir,"/src/MSA_PAAC_git.R"))
   
-  #MSA_PAAC(paste0(TooTSCdir,test_fasta))
+  MSA_PAAC(test_fasta)
   testfeatuers = read.csv(paste0(compostions,"MSA_PAAC.csv"),sep=",")
 
   
@@ -90,53 +125,11 @@ if(!terminate) {
   #predict
   svmpred<- oneVsRestSVM(standardizedData)
   
-  #for validation
-  fclass=as.numeric(factor(substates, levels = substates))
-  pred=factor(svmpred$pred, levels=fclass)
-  test.class=read.csv(paste0(TooTSCdir,"testclass.csv"))$class
-  Ref=factor(test.class, levels=fclass)
-  
-  confTest<- table(Predicted=pred,Reference=Ref)
-  conf<- confusionMatrix(confTest)
-  print(conf) #Accuracy : 0.7838   
   # write results
   seqs<- readFASTA(test_fasta)
   names(seqs)<- sub("\\|.*","",sub(".+?\\|","", names(seqs)))
   print(paste0( "Toot-SC output is found at: ", resultspath, "TooTSCout.csv"))
     write.csv(cbind(UniProtID=names(seqs),svmpred ),paste0(resultspath,"TooTSCout.csv"))
   
-  
-}
-standardized<-function(x,rmean,rsd){((x-rmean)/rsd)}
-pop.sd<-function(x){sqrt(sum((x-mean(x))^2)/length(x))}
-normalize<- function(matrix){
-  data=matrix
-  standardizedData<- matrix
-  for( i in 1:length(data[,1]) )#until L
-  {
-    #compute mean across the 20 aa
-    rmean= mean(data[i,])
-    rsd=pop.sd(data[i,])
-    standardizedData[i,]<- standardized(data[i,],rmean,rsd)
-  }
-	return(standardizedData)
-	
-	
-}
-oneVsRestSVM<- function(testdata){
-  probabilities<- matrix(data=0, nrow=length(testdata[,1]), ncol=length(substates))
-  colnames(probabilities)<-as.numeric(factor(substates, levels = substates))
-  for( z in 1:length(substates))
-  {
-    svm.fit<- readRDS(paste0(TooTSCdir,"models/MSAPAAC_class",z,"_1vsall.rds"))
-    
-    svm.predtest<-predict(svm.fit,standardizedData, probability=T)
-    probabilities[,z]<- attr(svm.predtest,"probabilities")[,"1"]
-    
-  }
-  
-  
-  pred<-as.vector(apply(probabilities, 1, function(x) names(which(x == max(x)))[1]))
-  return(cbind.data.frame(pred=pred,probabilities ,stringsAsFactors=F ))
   
 }
