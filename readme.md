@@ -1,7 +1,7 @@
 # TooT-SC.v1.svm.11
 
 This tool predicts the substrate class of a given transporter. The class can belong to one of the following eleven categories 
-[1] Nonselective
+[1] nonselective inorganic molecule
 [2] water
 [3] inorganic cation
 [4] inorganic anion
@@ -10,8 +10,8 @@ This tool predicts the substrate class of a given transporter. The class can bel
 [7] amino acid and derivatives
 [8] other Organonitrogen compound
 [9] nucleotide
-[10] Organic heterocyclic
-[11] Miscellaneous.
+[10] organic heterocyclic
+[11] miscellaneous.
 
 
 Details on ChEBI mapping is found on Substrate_ChEBI.csv file.
