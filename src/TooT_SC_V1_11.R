@@ -50,7 +50,7 @@ terminate <- FALSE
 
 out <- "."
 TooTSCdir <- "."
-
+db<-"-1"
 for(i in args){
   arg = strsplit(i, "=")[[1]];
   
@@ -64,16 +64,21 @@ for(i in args){
          "-TooTSC"={
            TooTSCdir <- arg[2]
          },
+         "-db"={
+             db <- arg[2]
+         },
          "-help"={
            cat("TooTSC v1.0 (Oct. 2019)\n")
            cat("\n")
-           cat("Usage: TooTSC -query=<input> [-TooTSC=<TooTSCdir>] [-out=<outdir>]\n")
+           cat("Usage: TooTSC -query=<input> [-TooTSC=<TooTSCdir>] [-out=<outdir>] [-db=<database path>]\n")
            cat("\n")
            cat("\t<input> is your sequence input file in fasta format\n")
            cat("\t<out> is the output directory where you want the predicted results, formatted as csv\n")
            cat("\t\t<out> defaults to '",out,"'\n")
            cat("\t<TooTSCdir> is the directory where the base TooT-SC files are located")
            cat("\t\t<TooTSCdir> defaults to '",TooTSCdir,"'\n")
+           cat("\t <database path> is the relative path to the database\n")
+           cat("\t\t<database path> defaults to",TooTSCdir,"/db/\n")
            cat("\n")
            terminate <- TRUE
            break
@@ -97,6 +102,11 @@ if(!terminate) {
   library(e1071)
   library(caret)
   wd=normalizePath(path.expand(".")) # change the the tool directory
+  if(db=="-1"){
+    dbpath <- paste0(TooTSCdir, "/db/")
+  }else{
+    dbpath <- db
+  }
   dbpath=paste0(TooTSCdir, "/db/")
   compostions=paste0(TooTSCdir,"/intermediate_files/Compositions/")
   intermediateFiles=paste0(TooTSCdir,"/intermediate_files/")
