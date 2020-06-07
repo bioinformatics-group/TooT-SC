@@ -50,7 +50,7 @@ terminate <- FALSE
 
 out <- "."
 TooTSCdir <- "."
-db<-"-1"
+db<-"."
 for(i in args){
   arg = strsplit(i, "=")[[1]];
   
@@ -102,12 +102,16 @@ if(!terminate) {
   library(e1071)
   library(caret)
   wd=normalizePath(path.expand(".")) # change the the tool directory
-  if(db=="-1"){
+  
+  if(db=="."){ #default to TooTSCdir/db/
     dbpath <- paste0(TooTSCdir, "/db/")
-  }else{
-    dbpath <- db
   }
-  dbpath=paste0(TooTSCdir, "/db/")
+  else if (normalizePath(db) == db){ #the path given is absolute
+    dbpath <- db
+  }else{ # the path given is relative
+    dbpath <- paste0(TooTSCdir, db)
+  }
+
   compostions=paste0(TooTSCdir,"/intermediate_files/Compositions/")
   intermediateFiles=paste0(TooTSCdir,"/intermediate_files/")
   substates<- c("Nonselective",
