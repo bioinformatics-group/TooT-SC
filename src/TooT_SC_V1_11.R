@@ -19,9 +19,9 @@ normalize<- function(matrix){
     rsd=pop.sd(data[i,])
     standardizedData[i,]<- standardized(data[i,],rmean,rsd)
   }
-        return(standardizedData)
-
-
+  return(standardizedData)
+  
+  
 }
 oneVsRestSVM<- function(testdata){
   probabilities<- matrix(data=0, nrow=length(testdata[,1]), ncol=length(substates))
@@ -29,16 +29,16 @@ oneVsRestSVM<- function(testdata){
   for( z in 1:length(substates))
   {
     svm.fit<- readRDS(paste0(TooTSCdir,"/models/MSAPAAC_class",z,"_1vsall.rds"))
-
+    
     svm.predtest<-predict(svm.fit,standardizedData, probability=T)
     probabilities[,z]<- attr(svm.predtest,"probabilities")[,"1"]
-
+    
   }
-
-
+  
+  
   pred<-as.vector(apply(probabilities, 1, function(x) names(which(x == max(x)))[1]))
   return(cbind.data.frame(pred=pred,probabilities ,stringsAsFactors=F ))
-
+  
 }
 
 
@@ -50,7 +50,7 @@ terminate <- FALSE
 
 out <- "."
 TooTSCdir <- "."
-db<-"."
+db<-"/db/"
 for(i in args){
   arg = strsplit(i, "=")[[1]];
   
@@ -62,10 +62,10 @@ for(i in args){
            out <- arg[2]
          },
          "-TooTSC"={
-           TooTSCdir <- arg[2]
+           TooTSCdir <- normalizePath(arg[2])
          },
          "-db"={
-             db <- arg[2]
+           db <- normalizePath(arg[2])
          },
          "-help"={
            cat("TooTSC v1.0 (Oct. 2019)\n")
@@ -91,9 +91,16 @@ if(!terminate) {
   if(!exists("query")) {
     stop("-query has not been passed")
   }
-  
+
+
+  # install any missing packages
+  packages <- c("seqinr","Biostrings","stringr","stringr","protr","ISLR","e1071","caret","R.utils")
+  install.packages(setdiff(packages, rownames(installed.packages())))
+
   test_fasta <- normalizePath(path.expand(query))
   resultspath <- paste0(normalizePath(path.expand(out)),"/")
+  
+
   require(seqinr)
   library("Biostrings")
   library("stringr")
@@ -101,17 +108,16 @@ if(!terminate) {
   library(ISLR)
   library(e1071)
   library(caret)
+  library(R.utils)
   wd=normalizePath(path.expand(".")) # change the the tool directory
   
-  if(db=="."){ #default to TooTSCdir/db/
-    dbpath <- paste0(TooTSCdir, "/db/")
-  }
-  else if (normalizePath(db) == db){ #the path given is absolute
+  if (isAbsolutePath(db)){
     dbpath <- db
-  }else{ # the path given is relative
+  }else{
     dbpath <- paste0(TooTSCdir, db)
   }
-
+  
+  #dbpath=paste0(TooTSCdir, "/db/")
   compostions=paste0(TooTSCdir,"/intermediate_files/Compositions/")
   intermediateFiles=paste0(TooTSCdir,"/intermediate_files/")
   substates<- c("Nonselective",
@@ -132,7 +138,7 @@ if(!terminate) {
   
   MSA_PAAC(test_fasta)
   testfeatuers = read.csv(paste0(compostions,"MSA_PAAC.csv"),sep=",")
-
+  
   
   #normalize
   standardizedData <- normalize(as.matrix(testfeatuers[,c(-1,-2)]))
@@ -143,7 +149,7 @@ if(!terminate) {
   seqs<- readFASTA(test_fasta)
   names(seqs)<- sub("\\|.*","",sub(".+?\\|","", names(seqs)))
   print(paste0( "Toot-SC output is found at: ", resultspath, "TooTSCout.csv"))
-    write.csv(cbind(UniProtID=names(seqs),svmpred ),paste0(resultspath,"TooTSCout.csv"))
+  write.csv(cbind(UniProtID=names(seqs),svmpred ),paste0(resultspath,"TooTSCout.csv"))
   
   
 }
