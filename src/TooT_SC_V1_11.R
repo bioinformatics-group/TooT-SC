@@ -93,9 +93,6 @@ if(!terminate) {
   }
 
 
-  # install any missing packages
-  packages <- c("seqinr","Biostrings","stringr","stringr","protr","ISLR","e1071","caret","R.utils")
-  install.packages(setdiff(packages, rownames(installed.packages())))
 
   test_fasta <- normalizePath(path.expand(query))
   resultspath <- paste0(normalizePath(path.expand(out)),"/")
