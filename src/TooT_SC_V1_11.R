@@ -91,9 +91,13 @@ if(!terminate) {
   if(!exists("query")) {
     stop("-query has not been passed")
   }
-  
+
+
+
   test_fasta <- normalizePath(path.expand(query))
   resultspath <- paste0(normalizePath(path.expand(out)),"/")
+  
+
   require(seqinr)
   library("Biostrings")
   library("stringr")
