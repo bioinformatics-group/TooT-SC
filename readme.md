@@ -55,9 +55,10 @@ The scripts needed to use the tool.
 
 ## HOW TO USE
  - This tool requires that `BLAST` be pre-installed
- - Usage: `Rscript src/TooT_SC_V1_11.R -query=<input> [-TooTSC=<TooTSCdir>] [-out=<outdir>]`
+ - Usage: `Rscript src/TooT_SC_V1_11.R -query=<input> [-TooTSC=<TooTSCdir>] [-out=<outdir>] [-db=<path to db>]`
   - `<input>` is your sequence input file in fasta format
   - `<out>` is the output directory where you want the predicted 	results, formatted as csv
   - `<TooTSCdir>` is the directory where the base TooT-SC files 	are located
+  - `<db> is the directory where the database is stored`
  - `MSA_PAAC` features of each sequence in the test set is  found under [intermediate_files/Compositions/MSA_PAAC.csv](intermediate_files/Compositions/MSA_PAAC.csv)
 
