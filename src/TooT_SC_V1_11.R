@@ -50,7 +50,7 @@ terminate <- FALSE
 
 out <- "."
 TooTSCdir <- "."
-db<-"/db/"
+db<-"./db/"
 for(i in args){
   arg = strsplit(i, "=")[[1]];
   
