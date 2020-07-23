@@ -117,7 +117,7 @@ if(!terminate) {
   #dbpath=paste0(TooTSCdir, "/db/")
   compostions=paste0(TooTSCdir,"/intermediate_files/Compositions/")
   intermediateFiles=paste0(TooTSCdir,"/intermediate_files/")
-  substates<- c("Nonselective",
+  substrates<- c("Nonselective",
                 "water",
                 "inorganic cation",
                 "inorganic anion",
@@ -141,6 +141,8 @@ if(!terminate) {
   standardizedData <- normalize(as.matrix(testfeatuers[,c(-1,-2)]))
   #predict
   svmpred<- oneVsRestSVM(standardizedData)
+  svmpred$pred<- substrates[as.numeric(svmpred$pred)]
+  names(svmpred)<-c("pred",paste(substrates,"probability") )
   
   # write results
   seqs<- readFASTA(test_fasta)
