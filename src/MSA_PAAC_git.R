@@ -50,30 +50,35 @@ blastpSeq<- function(seq, start.pos = 1L, end.pos = nchar(seq),
   print(cmdblastp)
   if (silent == TRUE) system(cmdblastp, ignore.stdout = F) else system(cmdblastp)      
   #get the hit sequences Id
-  data = read.table(paste0(output.path,"out.txt"))
-  HomologousSeqIds= data$V2
-  dindex <- which(duplicated(HomologousSeqIds))
-  if(length(dindex) !=0 )
-  {
-    HomologousSeqIds=HomologousSeqIds[-dindex]# remove duplicates if any
+  if(file.info(paste0(output.path,"out.txt"))$size != 0) # if there some hits are found
+   {
+    data = read.table(paste0(output.path,"out.txt"))
+    HomologousSeqIds= data$V2
+    dindex <- which(duplicated(HomologousSeqIds))
+    if(length(dindex) !=0 )
+    {
+      HomologousSeqIds=HomologousSeqIds[-dindex]# remove duplicates if any
+    }
+    # print(length(HomologousSeqIds))
+
+    if(length(HomologousSeqIds)>=120)
+      HomologousSeqIds<-HomologousSeqIds[1:120] 
+    else
+      HomologousSeqIds<- HomologousSeqIds
+
+    fileName<-paste0(output.path,"H.txt")
+    fileConn<-file(fileName)
+    write(as.character(HomologousSeqIds), fileConn)
+    close(fileConn)
+
+    #get the cossponding Fasta file
+    getseqcmd= paste0(shQuote(Sys.which('blastdbcmd')),' -db ',shQuote(database.path), ' -entry_batch ', fileName, ' -out ', paste0(output.path,"seq.txt"))
+    # print(getseqcmd)
+    if (silent == TRUE) system(getseqcmd, ignore.stdout = TRUE) else system(getseqcmd)
+      
+  }else{
+    print (paste0( output.path,"---No hits found"))
   }
-  # print(length(HomologousSeqIds))
-  
-  if(length(HomologousSeqIds)>=120)
-    HomologousSeqIds<-HomologousSeqIds[1:120] 
-  else
-    HomologousSeqIds<- HomologousSeqIds
-  
-  fileName<-paste0(output.path,"H.txt")
-  fileConn<-file(fileName)
-  write(as.character(HomologousSeqIds), fileConn)
-  close(fileConn)
-  
-  #get the cossponding Fasta file
-  getseqcmd= paste0(shQuote(Sys.which('blastdbcmd')),' -db ',shQuote(database.path), ' -entry_batch ', fileName, ' -out ', paste0(output.path,"seq.txt"))
-  # print(getseqcmd)
-  if (silent == TRUE) system(getseqcmd, ignore.stdout = TRUE) else system(getseqcmd)
-  
 }
 
 FilteredMSA= function(path)
@@ -138,7 +143,7 @@ MSA_PAAC<- function(fastafile)
   for(j in c(1:length(seqs)))
   {
     x<- seqs[j]
-    PreparedataforMSAAAC(seq= x,database.path=paste0(dbpath,"/SwissOct18.fasta"),output.path=intermediateFiles)
+    PreparedataforMSAAAC(seq= x,database.path=paste0(dbpath,"/all.fasta"),output.path=intermediateFiles)
   }
   
 
@@ -150,11 +155,20 @@ for(i in c(1:length(AAfiles)))
 {
   subdirName<- paste0(intermediateFiles,AAfiles[i],"/")
   print(subdirName)
-  AllComp<- ClaculateCompostions_return(subdirName,"seq.txt")
   
-  outputDC <- AllComp$DC
-  DC<- apply(outputDC, 2, mean)
-  MSAPAAC[i,]<-   c("NA",DC)
+    if((file.exists(paste0(subdirName, "seq.txt"))) && (file.info(paste0(subdirName, "seq.txt"))$size  >0))
+    {
+        AllComp<- ClaculateCompostions_return(subdirName,"seq.txt")
+        outputDC <- AllComp$DC
+        DC<- apply(outputDC, 2, mean)
+        MSAPAAC[i,]<-   c("NA",DC)
+      
+    }else{ # if the sequence does not have any hits, just compute the PAAC from the single query
+        print("seq.txt does not exist")
+        DC<- extractDC(as.character(seqs[i]))
+        MSAPAAC[i,]<-   c("NA",DC)
+    }
+
 }
 dfMSAPAAC<- rbind(dfMSAPAAC,MSAPAAC)
 
