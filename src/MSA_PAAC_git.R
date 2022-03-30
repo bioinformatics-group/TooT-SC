@@ -143,7 +143,7 @@ MSA_PAAC<- function(fastafile)
   for(j in c(1:length(seqs)))
   {
     x<- seqs[j]
-    PreparedataforMSAAAC(seq= x,database.path=paste0(dbpath,"/all.fasta"),output.path=intermediateFiles)
+    PreparedataforMSAAAC(seq= x,database.path=paste0(dbpath,"/SwissOct18.fasta"),output.path=intermediateFiles)
   }
   
 

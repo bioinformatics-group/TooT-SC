@@ -24,9 +24,9 @@ normalize<- function(matrix){
   
 }
 oneVsRestSVM<- function(testdata){
-  probabilities<- matrix(data=0, nrow=length(testdata[,1]), ncol=length(substates))
-  colnames(probabilities)<-as.numeric(factor(substates, levels = substates))
-  for( z in 1:length(substates))
+  probabilities<- matrix(data=0, nrow=length(testdata[,1]), ncol=length(substrates))
+  colnames(probabilities)<-as.numeric(factor(substrates, levels = substrates))
+  for( z in 1:length(substrates))
   {
     svm.fit<- readRDS(paste0(TooTSCdir,"/models/MSAPAAC_class",z,"_1vsall.rds"))
     
