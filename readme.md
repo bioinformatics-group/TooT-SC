@@ -49,6 +49,7 @@ intermediate_files/Compostions: Contains the extracted `MSA_TPAAC` features of t
 ### db
 Contains the database to be used when performing BLAST.
 
+By default, if you unzip the contents of [this](https://tootsuite.encs.concordia.ca/databases/SwissOct18.tar.gz) into a `db` folder adjacent to the source folder, it should be in the default location (or specify it manually when you call it).
 
 ### src
 The scripts needed to use the tool.
