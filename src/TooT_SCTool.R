@@ -115,7 +115,7 @@ if(!terminate) {
   }
   
   #dbpath=paste0(TooTSCdir, "/db/")
-  compostions=paste0(TooTSCdir,"/intermediate_files/Compositions/")
+  compostions=paste0(TooTSCdir,"/Compositions/")
   intermediateFiles=paste0(TooTSCdir,"/intermediate_files/")
   substrates<- c("Nonselective",
                 "water",
