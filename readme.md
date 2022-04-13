@@ -40,25 +40,29 @@ Contains both the training and the independent testing dataset if fasta format, 
 The models were trained using the training dataset =(all dataset - independent testset)
 
 
-### intermediate_files and Compositions
-`intermediate_files` contains the homology details needed to extract the features. Details of the `Blast hits` for each sequence are found here.
+### Working Directory
+When run, the tool will create a `work` directory, common among all the TooT Suite. TooT-SC will create a directory named `TooT-SC` which will hold intermediate files created during the running of these tools.
+The top-level working directory contains the homology details needed to extract the features. Details of the `Blast hits` for each sequence are found here, one directory per sequence.
 
-`Compostions` Contains the extracted `MSA_TPAAC` features of the test set
+The `TooT-SC` directory will also contain a `Compostions` folder which contains the extracted `MSA_TPAAC` features of the test set
+
+The working directory can be quite large, so you may want to use `-work` to specify a better location for it if you're short on space, and be sure to clean it out from time to time.
 
 ### db
-Contains the database to be used when performing BLAST.
+The database to be used when performing BLAST.
 
-By default, if you unzip the contents of [this](https://tootsuite.encs.concordia.ca/databases/SwissOct18.tar.gz) into a `db` folder adjacent to the source folder, it should be in the default location (or specify it manually when you call it).
+By default, if you `tar -xzf` the contents of [this](https://tootsuite.encs.concordia.ca/databases/SwissOct18.tar.gz) into a `db` folder adjacent to the source folder, it should be in the default location that this tool checks. You may also specify the location manually via `-db`.
 
 ### src
 The scripts needed to use the tool.
 
 ## HOW TO USE
  - This tool requires that `BLAST` be pre-installed
- - Usage: `src/TooT_SCTool.R -query=<input> [-TooTSC=<TooTSCdir>] [-out=<outdir>] [-db=<path to db>]`
+ - Usage: `src/TooT_SCTool.R -query=<input> [-out=<outdir>] [-db=<path to db>] [-work=<Workdir>] [-TooTSC=<TooTSCdir>]`
   - `<input>` is your sequence input file in fasta format
   - `<out>` is the output directory where you want the predicted 	results, formatted as csv
-  - `<TooTSCdir>` is the directory where the base TooT-SC files 	are located
   - `<db> is the directory where the database is stored`
- - `MSA_PAAC` features of each sequence in the test set is  found under [Compositions/MSA_PAAC.csv](Compositions/MSA_PAAC.csv)
+  - `<Workdir>` is the directory where intermediate files will be stored after each run
+  - `<TooTSCdir>` is the directory where the base TooT-SC files 	are located
+ - `MSA_PAAC` features of each sequence in the test set are found under the working directory [Compositions/MSA_PAAC.csv](Compositions/MSA_PAAC.csv)
 
