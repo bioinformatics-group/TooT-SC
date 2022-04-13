@@ -2,7 +2,7 @@ firstrun=F
 blastpSeq<- function(seq, start.pos = 1L, end.pos = nchar(seq), 
                      blastp.path = NULL, makeblastdb.path = NULL, 
                      database.path = NULL, silent = TRUE, 
-                     evalue = 10L, output.path=resultspath){
+                     evalue = 10L, output.path=normalizePath(resultspath)){
   
   if (Sys.which('makeblastdb') == '' & is.null(makeblastdb.path))
     stop('Please install makeblastdb (included in the NCBI BLAST+) or specify makeblastdb.path.')
@@ -40,19 +40,20 @@ blastpSeq<- function(seq, start.pos = 1L, end.pos = nchar(seq),
       stop('evalue must be > 0')
     }
   }
+  outFile <- file.path(output.path, "out.txt")
   # Run Blastp
   cmdblastp = paste(
     paste0(shQuote(blastp.path),
            ' -comp_based_stats 1 -db ', shQuote(database.path),
-           ' -query ', shQuote(queryFasta),  ' -outfmt 6',' -out ', paste0(shQuote(output.path),"out.txt")))
+           ' -query ', shQuote(queryFasta),  ' -outfmt 6',' -out ', shQuote(outFile)))
   
   print("******************************")
   print(cmdblastp)
   if (silent == TRUE) system(cmdblastp, ignore.stdout = F) else system(cmdblastp)      
   #get the hit sequences Id
-  if(file.info(paste0(output.path,"out.txt"))$size != 0) # if there some hits are found
+  if(file.info(outFile)$size != 0) # if there some hits are found
    {
-    data = read.table(paste0(output.path,"out.txt"))
+    data = read.table(outFile)
     HomologousSeqIds= data$V2
     dindex <- which(duplicated(HomologousSeqIds))
     if(length(dindex) !=0 )
@@ -72,7 +73,8 @@ blastpSeq<- function(seq, start.pos = 1L, end.pos = nchar(seq),
     close(fileConn)
 
     #get the cossponding Fasta file
-    getseqcmd= paste0(shQuote(Sys.which('blastdbcmd')),' -db ',shQuote(database.path), ' -entry_batch ', fileName, ' -out ', paste0(output.path,"seq.txt"))
+    seqFile <- file.path(output.path, "seq.txt")
+    getseqcmd= paste0(shQuote(Sys.which('blastdbcmd')),' -db ',shQuote(database.path), ' -entry_batch ', fileName, ' -out ', seqFile)
     # print(getseqcmd)
     if (silent == TRUE) system(getseqcmd, ignore.stdout = TRUE) else system(getseqcmd)
       
@@ -95,13 +97,12 @@ FilteredMSA= function(path)
   system(removegapscmd)
   
 }
-ClaculateCompostions_return<- function(subdirName, filename)
+ClaculateCompositions_return<- function(subdirName, seqfile)
 { 
   
-  con= paste0(subdirName,filename)
-  print(con)
+  print(seqfile)
   
-  se<- read.fasta(con,seqtype = "AA",as.string=T)
+  se<- read.fasta(seqfile,seqtype = "AA",as.string=T)
   
   seqlist<- unlist(lapply(se,as.character))
   seqlist<-sapply(seqlist,gsub,pattern="[^GPAVLIMCFYWHKRQNEDST]",replacement="") # getting rid of gaps? not the smartest thing to do, need more work
@@ -120,10 +121,10 @@ ClaculateCompostions_return<- function(subdirName, filename)
 PreparedataforMSAAAC = function(seq, start.pos = 1L, end.pos = nchar(seq), 
                                 blastp.path = NULL, makeblastdb.path = NULL, 
                                 database.path = NULL, iter = 5, silent = TRUE, 
-                                evalue = 10L, output.path=resultspath) {
+                                evalue = 10L, output.path=normalizePath(resultspath)) {
   #1- run blastp on datafiles
   seqname=names(seq)
-  SeqDirectory=paste0(output.path,names(seq),"/")
+  SeqDirectory=file.path(output.path,names(seq))
   
   dir.create(SeqDirectory, showWarnings = FALSE, recursive = FALSE, mode = "0777")   
   blastpSeq(seq, start.pos , end.pos ,  blastp.path, makeblastdb.path , database.path , silent ,evalue, SeqDirectory)
@@ -143,7 +144,7 @@ MSA_PAAC<- function(fastafile)
   for(j in c(1:length(seqs)))
   {
     x<- seqs[j]
-    PreparedataforMSAAAC(seq= x,database.path=paste0(dbpath,"/SwissOct18.fasta"),output.path=intermediateFiles)
+    PreparedataforMSAAAC(seq= x,database.path=swissprotdb,output.path=intermediateFiles)
   }
   
 
@@ -153,12 +154,11 @@ dfMSAPAAC <- data.frame(matrix(ncol = 400+1, nrow =0))
 
 for(i in c(1:length(AAfiles)))
 {
-  subdirName<- paste0(intermediateFiles,AAfiles[i],"/")
-  print(subdirName)
-  
-    if((file.exists(paste0(subdirName, "seq.txt"))) && (file.info(paste0(subdirName, "seq.txt"))$size  >0))
+  subdirName <- file.path(intermediateFiles, AAfiles[i])
+    seqFile <- file.path(subdirName, "seq.txt")
+    if(file.exists(seqFile) && (file.info(seqFile)$size > 0))
     {
-        AllComp<- ClaculateCompostions_return(subdirName,"seq.txt")
+        AllComp<- ClaculateCompositions_return(subdirName, seqFile)
         outputDC <- AllComp$DC
         DC<- apply(outputDC, 2, mean)
         MSAPAAC[i,]<-   c("NA",DC)
@@ -173,5 +173,5 @@ for(i in c(1:length(AAfiles)))
 dfMSAPAAC<- rbind(dfMSAPAAC,MSAPAAC)
 
 
-write.csv(cbind(UniprotID=AAfiles,dfMSAPAAC), file = paste0(compostions,"MSA_PAAC.csv"),row.names = F)
+write.csv(cbind(UniprotID=AAfiles,dfMSAPAAC), file = file.path(compositions,"MSA_PAAC.csv"),row.names = F)
 }
