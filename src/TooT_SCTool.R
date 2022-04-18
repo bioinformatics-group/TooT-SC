@@ -1,14 +1,14 @@
 #! /usr/bin/Rscript
 
-suppressMessages(suppressWarnings(require(seqinr)))
+suppressMessages(suppressWarnings(library(seqinr)))
 suppressMessages(suppressWarnings(library("Biostrings")))
 suppressMessages(suppressWarnings(library("stringr")))
-suppressMessages(suppressWarnings(require(protr)))
+suppressMessages(suppressWarnings(library(protr)))
 suppressMessages(suppressWarnings(library(ISLR)))
 suppressMessages(suppressWarnings(library(e1071)))
 suppressMessages(suppressWarnings(library(caret)))
 suppressMessages(suppressWarnings(library(R.utils)))
-suppressMessages(suppressWarnings(require("funr")))
+suppressMessages(suppressWarnings(library("funr")))
 
 ###################################################
 ## Name: TooT_SC_V1_11.R
