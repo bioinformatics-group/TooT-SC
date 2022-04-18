@@ -64,5 +64,5 @@ The scripts needed to use the tool.
   - `<db> is the directory where the database is stored`
   - `<Workdir>` is the directory where intermediate files will be stored after each run
   - `<TooTSCdir>` is the directory where the base TooT-SC files 	are located
- - `MSA_PAAC` features of each sequence in the test set are found under the working directory [Compositions/MSA_PAAC.csv](Compositions/MSA_PAAC.csv)
+ - `MSA_PAAC` features of each sequence in the test set are found under the working directory `Compositions/MSA_PAAC.csv`
 
