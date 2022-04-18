@@ -223,8 +223,7 @@ if(length(missingModels) > 0) {
   # write results
   seqs<- readFASTA(query)
   names(seqs)<- sub("\\|.*","",sub(".+?\\|","", names(seqs)))
-  print(paste0( "Toot-SC output is found at: ", out, "TooTSCout.csv"))
-  write.csv(cbind(UniProtID=names(seqs),svmpred ),file.path(out,"TooTSCout.csv"))
-  
+  print(paste0( "Toot-SC output is found at: ", file.path(out,"TooTSCout.csv")))
+  write.csv(cbind(UniProtID=names(seqs),svmpred ), file.path(out,"TooTSCout.csv"))
   
 }
