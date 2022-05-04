@@ -67,7 +67,7 @@ for(i in args){
   
   switch(arg[1],
          "-query"={
-           query <- normalizePath(arg[2])
+           tootscquery <- normalizePath(arg[2])
          },
          "-out"={
            out <- normalizePath(arg[2])
@@ -108,12 +108,12 @@ if(!terminate) {
 #
 # Validate that the query exists
 #
-  if(!exists("query")) {
+  if(!exists("tootscquery")) {
     stop("-query has not been passed")
   }
 
-if(!file.exists(query)) {
-   stop("The specified query file does not exist: '", query,"'", sep="")
+if(!file.exists(tootscquery)) {
+   stop("The specified query file does not exist: '", tootscquery,"'", sep="")
 }
 
 #
@@ -209,7 +209,7 @@ if(length(missingModels) > 0) {
   #testing data with unknown substrates
   source(MSAPAACSource)
   
-  MSA_PAAC(query)
+  MSA_PAAC(tootscquery)
   testfeatuers = read.csv(file.path(compositions,"MSA_PAAC.csv"),sep=",")
   
   
@@ -221,7 +221,7 @@ if(length(missingModels) > 0) {
   names(svmpred)<-c("pred",paste(substrates,"probability") )
   
   # write results
-  seqs<- readFASTA(query)
+  seqs<- readFASTA(tootscquery)
   names(seqs)<- sub("\\|.*","",sub(".+?\\|","", names(seqs)))
   print(paste0( "Toot-SC output is found at: ", file.path(out,"TooTSCout.csv")))
   write.csv(cbind(UniProtID=names(seqs),svmpred ), file.path(out,"TooTSCout.csv"))
