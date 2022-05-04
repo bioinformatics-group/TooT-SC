@@ -51,14 +51,14 @@ The working directory can be quite large, so you may want to use `-work` to spec
 ### db
 The database to be used when performing BLAST.
 
-By default, if you `tar -xzf` the contents of [this](https://tootsuite.encs.concordia.ca/databases/SwissOct18.tar.gz) into a `db` folder adjacent to the source folder, it should be in the default location that this tool checks. You may also specify the location manually via `-db`.
+By default, if you `tar -xzf` [this](https://tootsuite.encs.concordia.ca/databases/TooT-SC/v1.svm.11_db.tar.gz) adjacent to the source folder, it should create a `db` folder in the default location that this tool checks. You may also specify the location manually via `-db`. This should be the Swissprot Oct. 2018 database used in ther related publication.
 
 ### src
 The scripts needed to use the tool.
 
 ## HOW TO USE
  - This tool requires that `BLAST` be pre-installed
- - Usage: `src/TooT_SCTool.R -query=<input> [-out=<outdir>] [-db=<path to db>] [-work=<Workdir>] [-TooTSC=<TooTSCdir>]`
+ - Usage: `src/TooT_SC.R -query=<input> [-out=<outdir>] [-db=<path to db>] [-work=<Workdir>] [-TooTSC=<TooTSCdir>]`
   - `<input>` is your sequence input file in fasta format
   - `<out>` is the output directory where you want the predicted 	results, formatted as csv
   - `<db> is the directory where the database is stored`
